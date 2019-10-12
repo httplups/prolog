@@ -5,6 +5,8 @@
 % Funciona: [quad(a,8,2,2), quad(d,7,3,1)].
 % Não funciona: 
 
+% testar caso: uma figura dentro da outra
+
 topo:- 
   read(Lista),  % le a entrada
   write_ln(Lista), % printa a entrada
@@ -30,12 +32,14 @@ topo:-
   for1([]).
   for1([A|R]) :- for2(A, R), for1(R).
 
-  % inter(A, B) :- inter_circ_circ(A,B).
+  inter(A,B) :- inter_circ_circ(A,B).
   inter(A,B) :- inter_quad_quad(A,B).
-  % inter(A,B) :- inter_circ_quad(A,B).
+  inter(A,B) :- inter_circ_quad(A,B).
   
 
   inter_circ_quad(_,_) :- true.
+  inter_quad_quad(A, B) :- set_coord(A, CooA), set_coord(B, CooB), is_inter_quad(CooB, CooA).
+
   % inter_quad_quad(A,B) :- true.
 % inter_circ_circ(circ(_,X1,_,R1), circ(_,X2,_,R2)) :- true, !.
   inter_circ_circ(circ(_,X1,_,R1), circ(_,X2,_,R2)) :- ((X2 - R2) - (X1 + R1)) < 0
@@ -51,24 +55,23 @@ set_coord(quad(N, X, Y, L), coord(N,A,B,C,D)) :- A = [AX,AY], AX is X - (L/2), A
                                                  C = [BX,CY], CY is Y + (L/2),
                                                  D = [AX,CY].
 
-inter_quad_quad(A, B) :- set_coord(A, CooA), set_coord(B, CooB), write_ln(CooA), write_ln(CooB), is_inter_quad(CooB, CooA).
 
-is_inter_quad(coord(Q1,A1,B1,_,D1), coord(Q2,A2,B2,_,D2)) :- write_ln("Here"),get_elem_pos(A2,0,A2X), % verifica na horizontal
-                                                               get_elem_pos(B2,0,B2X),
-                                                               get_elem_pos(A1,0,A1X),
-                                                               get_elem_pos(B1,0,B1X),
-                                                               verifica_x(A2X,B2X,A1X,B1X, Cond1),
-                                                               write_ln(A2X), write_ln(B2X), write_ln(A1X), write_ln(B1X),
+is_inter_quad(coord(Q1,A1,B1,_,D1), coord(Q2,A2,B2,_,D2)) :-  get_elem_pos(A2,0,A2X), % verifica na horizontal
+                                                              get_elem_pos(B2,0,B2X),
+                                                              get_elem_pos(A1,0,A1X),
+                                                              get_elem_pos(B1,0,B1X),
+                                                              verifica_x(A2X,B2X,A1X,B1X, Cond1),
+                                                            %  write_ln(A2X), write_ln(B2X), write_ln(A1X), write_ln(B1X),
 
-                                                               get_elem_pos(D2,1,D2Y),
-                                                               get_elem_pos(A2,1,A2Y),
-                                                               get_elem_pos(A1,1,A1Y),
-                                                               get_elem_pos(D1,1,D1Y),
-                                                               verifica_y(D2Y,A2Y,D1Y,A1Y, Cond2),
-                                                               write_ln(D2Y), write_ln(A2Y), write_ln(D1Y), write_ln(A1Y),
-                                                               write_ln(Cond1),
-                                                               write_ln(Cond2),
-                                                               write("Foi"), write(" "), write(Q1),write(" "), write_ln(Q2).
+                                                              get_elem_pos(D2,1,D2Y),
+                                                              get_elem_pos(A2,1,A2Y),
+                                                              get_elem_pos(A1,1,A1Y),
+                                                              get_elem_pos(D1,1,D1Y),
+                                                              verifica_y(D2Y,A2Y,D1Y,A1Y, Cond2),
+                                                            %  write_ln(D2Y), write_ln(A2Y), write_ln(D1Y), write_ln(A1Y),
+                                                            %  write_ln(Cond1),
+                                                            %  write_ln(Cond2),
+                                                              write("Foi"), write(" "), write(Q2),write(" "), write_ln(Q1).
 
 
 
