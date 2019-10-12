@@ -1,6 +1,10 @@
 % RA: 201705 - Luana Felipe de Barros
 % RA: ****** - Guilherme Tetsuya Inuy
 
+% % Casos de Teste: 
+% Funciona: [quad(a,8,2,2), quad(d,7,3,1)].
+% Não funciona: 
+
 topo:- 
   read(Lista),  % le a entrada
   write_ln(Lista), % printa a entrada
@@ -31,7 +35,7 @@ topo:-
   % inter(A,B) :- inter_circ_quad(A,B).
   
 
-  inter_circ_quad(A,B) :- true.
+  inter_circ_quad(_,_) :- true.
   % inter_quad_quad(A,B) :- true.
 % inter_circ_circ(circ(_,X1,_,R1), circ(_,X2,_,R2)) :- true, !.
   inter_circ_circ(circ(_,X1,_,R1), circ(_,X2,_,R2)) :- ((X2 - R2) - (X1 + R1)) < 0
@@ -49,32 +53,37 @@ set_coord(quad(N, X, Y, L), coord(N,A,B,C,D)) :- A = [AX,AY], AX is X - (L/2), A
 
 inter_quad_quad(A, B) :- set_coord(A, CooA), set_coord(B, CooB), write_ln(CooA), write_ln(CooB), is_inter_quad(CooB, CooA).
 
-is_inter_quad(coord(Q1,A1,B1,C1,D1), coord(Q2,A2,B2,C2,D2)) :- write_ln("Here"),get_elem_pos(A2,0,A2X), % verifica na horizontal
+is_inter_quad(coord(Q1,A1,B1,_,D1), coord(Q2,A2,B2,_,D2)) :- write_ln("Here"),get_elem_pos(A2,0,A2X), % verifica na horizontal
                                                                get_elem_pos(B2,0,B2X),
                                                                get_elem_pos(A1,0,A1X),
                                                                get_elem_pos(B1,0,B1X),
-                                                               verifica_x(A2X,B2X,A1X,B1X),
+                                                               verifica_x(A2X,B2X,A1X,B1X, Cond1),
                                                                write_ln(A2X), write_ln(B2X), write_ln(A1X), write_ln(B1X),
 
                                                                get_elem_pos(D2,1,D2Y),
                                                                get_elem_pos(A2,1,A2Y),
                                                                get_elem_pos(A1,1,A1Y),
                                                                get_elem_pos(D1,1,D1Y),
-                                                               verifica_y(D2Y,A2Y,D1Y,A1Y),
-                                                               write_ln(D2Y), write_ln(A2Y), write_ln(D1Y), write_ln(A1Y).
+                                                               verifica_y(D2Y,A2Y,D1Y,A1Y, Cond2),
+                                                               write_ln(D2Y), write_ln(A2Y), write_ln(D1Y), write_ln(A1Y),
+                                                               write_ln(Cond1),
+                                                               write_ln(Cond2),
+                                                               write("Foi"), write(" "), write(Q1),write(" "), write_ln(Q2).
 
 
 
 
 % retorna os elementos do par ordenado do plano cartesiano
 get_elem_pos([],_, _) :- fail, !.
-get_elem_pos([X, Y], N, _) :- N > 1, !,fail.
-get_elem_pos([X, Y], 0, X).
-get_elem_pos([X, Y], 1, Y).
+get_elem_pos(_, N, _) :- N > 1, !,fail.
+get_elem_pos([X, _], 0, X).
+get_elem_pos([_, Y], 1, Y).
 
 %  verifica se os pontos A2X ou B2X estão entre os pontos A1X e B1X.
-verifica_x(A2X,B2X,A1X,B1X) :- (A2X >= A1X, A2X =< B1X).
-verifica_x(A2X,B2X,A1X,B1X) :- (B2X >= A1X, B2X =< B1X).
+verifica_x(A2X,_,A1X,B1X, true) :- (A2X >= A1X, A2X =< B1X).
+verifica_x(_,B2X,A1X,B1X, true) :- (B2X >= A1X, B2X =< B1X).
+verifica_x(_,_,_,_, fail).
 
-verifica_y(D2Y,A2Y,D1Y,A1Y) :- (D2Y =< D1Y, D2Y >= A1Y). 
-verifica_y(D2Y,A2Y,D1Y,A1Y) :- (A2Y =< D1Y, A2Y >= A1Y). 
+verifica_y(D2Y,_,D1Y,A1Y, true) :- (D2Y =< D1Y, D2Y >= A1Y). 
+verifica_y(_,A2Y,D1Y,A1Y, true) :- (A2Y =< D1Y, A2Y >= A1Y). 
+verifica_y(_,_,_,_, fail).
