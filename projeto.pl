@@ -49,14 +49,17 @@ topo:-
                                                   B = [BX,AY], BX is X + (L/2),
                                                   C = [BX,CY], CY is Y + (L/2),
                                                   D = [AX,CY].
+                                                  % write_ln(A),write_ln(B),write_ln(C),write_ln(D).
 
   is_inter_quad(coord(Q1,A1,B1,_,D1), coord(Q2,A2,B2,_,D2)) :-  get_elem_pos(A2,0,A2X), % verifica na horizontal
                                                                 get_elem_pos(B2,0,B2X),
                                                                 get_elem_pos(A1,0,A1X),
                                                                 get_elem_pos(B1,0,B1X),
                                                                 verifica_x(A2X,B2X,A1X,B1X, Cond1),
-                                                              %  write_ln(A2X), write_ln(B2X), write_ln(A1X), write_ln(B1X),
+                                                                write_ln(Cond1),
 
+                                                                % write_ln(A2X), write_ln(B2X), write_ln(A1X), write_ln(B1X),
+                                                                Cond1 = True,
                                                                 get_elem_pos(D2,1,D2Y),
                                                                 get_elem_pos(A2,1,A2Y),
                                                                 get_elem_pos(A1,1,A1Y),
@@ -64,8 +67,11 @@ topo:-
                                                                 verifica_y(D2Y,A2Y,D1Y,A1Y, Cond2),
                                                               %  write_ln(D2Y), write_ln(A2Y), write_ln(D1Y), write_ln(A1Y),
                                                               %  write_ln(Cond1),
-                                                              %  write_ln(Cond2),
-                                                                write("Foi"), write(" "), write(Q2),write(" "), write_ln(Q1).
+                                                               write_ln(Cond2),
+                                                                ((Cond1 = true, Cond2 = true) 
+                                                                -> write("Eh Interseccao"), write(" "), write(Q2),write(" "), write_ln(Q1)
+                                                                ; write("Nao Eh Interseccao"), write(" "), write(Q2),write(" "), write_ln(Q1)).
+
 
 
   % retorna os elementos do par ordenado do plano cartesiano
@@ -75,8 +81,8 @@ topo:-
   get_elem_pos([_, Y], 1, Y).
 
   %  verifica se os pontos A2X ou B2X estão entre os pontos A1X e B1X.
-  verifica_x(A2X,_,A1X,B1X, true) :- (A2X >= A1X, A2X =< B1X).
-  verifica_x(_,B2X,A1X,B1X, true) :- (B2X >= A1X, B2X =< B1X).
+  verifica_x(A2X,_,A1X,B1X, true) :- (A2X >= A1X, A2X =< B1X), write_ln("Entrou Aqui 1").
+  verifica_x(_,B2X,A1X,B1X, true) :- (B2X >= A1X, B2X =< B1X),  write_ln("Entrou Aqui 2").
   verifica_x(_,_,_,_, fail).
 
   verifica_y(D2Y,_,D1Y,A1Y, true) :- (D2Y =< D1Y, D2Y >= A1Y). 
